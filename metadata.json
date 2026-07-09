@@ -1,0 +1,6 @@
+{
+  "name": "Money Transfer Simulation",
+  "description": "A robust full-stack money transfer simulation with .NET 8 Web API, MS SQL Server, React, and Docker.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

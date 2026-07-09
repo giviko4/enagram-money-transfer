@@ -1,0 +1,37 @@
+services:
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: money-strat-db
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=YourStrongPassword123!
+    ports:
+      - "1599:1433" # შეცვლილია 1599-ზე კონფლიქტის ასაცილებლად
+    healthcheck:
+      test: ["CMD", "/opt/mssql-tools18/bin/sqlcmd", "-S", "localhost", "-U", "sa", "-P", "YourStrongPassword123!", "-Q", "SELECT 1", "-C"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    container_name: money-strat-api
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "5033:5033"
+    environment:
+      - ConnectionStrings__DefaultConnection=Server=db;Database=PartnerDb;User Id=sa;Password=YourStrongPassword123!;TrustServerCertificate=true;
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    container_name: money-strat-web
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend

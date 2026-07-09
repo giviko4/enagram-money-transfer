@@ -1,0 +1,18 @@
+# Build stage - ვიყენებთ სტაბილურ 8.0 ვერსიას
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+WORKDIR /app
+
+# დააკოპირე პროექტის ფაილები
+COPY backend/*.csproj ./backend/
+RUN dotnet restore backend/*.csproj
+
+# დააკოპირე ყველაფერი და დააბილდე
+COPY . .
+RUN dotnet publish backend/*.csproj -c Release -o out
+
+# Runtime stage - აქაც 8.0 ვერსია
+FROM mcr.microsoft.com/dotnet/aspnet:8.0
+WORKDIR /app
+COPY --from=build /app/out .
+
+ENTRYPOINT ["dotnet", "MoneyTransferApi.dll"]

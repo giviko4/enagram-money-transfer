@@ -1,0 +1,13 @@
+# React/Node
+node_modules/
+dist/
+.env
+
+# .NET
+bin/
+obj/
+*.user
+*.suo
+
+# Docker
+.docker_data/
